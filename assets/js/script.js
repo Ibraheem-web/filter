@@ -7,6 +7,7 @@ const menu1 = document.getElementById('dropdown-menu-1');
 const topMenu = document.getElementById('top-dropdown');
 const keywordInput = document.getElementById('keyword-input');
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const clearText = document.getElementById('clearText');
 const clearAll = document.getElementById('clear-all');
 const fromSlider2 = document.querySelector('#fromSlider2');
 const toSlider2 = document.querySelector('#toSlider2');
@@ -79,6 +80,10 @@ document.addEventListener('click', (eve) => {
 topMenu.addEventListener('click', (eve) => {
   eve.stopPropagation();
 });
+
+clearText.addEventListener('click', () => {
+  keywordInput.value = '';
+})
 
 // FILTER CLEAR FUNCTIONALITY
 clearAll.addEventListener('click', () => {
