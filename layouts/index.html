@@ -1,0 +1,568 @@
+{{ define "main" }} {{ with .Site.GetPage "section" "my-page" }}
+<!--
+  This example requires some changes to your config:
+  
+  
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  
+-->
+<!-- Filters -->
+<section
+  aria-labelledby="filter-heading"
+  class="grid items-center border-b border-t border-gray-200"
+>
+  <h2 id="filter-heading" class="sr-only">Filters</h2>
+  <div class="relative col-start-1 row-start-1 py-4">
+    <div
+      class="mx-auto flex max-w-7xl space-x-6 divide-x divide-gray-200 px-4 text-sm sm:px-6 lg:px-8"
+    >
+      <div>
+        <button
+          type="button"
+          class="group flex items-center font-medium text-gray-700"
+          aria-controls="disclosure-1"
+          aria-expanded="false"
+        >
+          <svg
+            class="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500"
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.591L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Filter
+        </button>
+      </div>
+      <div class="pl-6">
+        <button type="button" class="text-gray-500" id="clear-all">
+          Clear all
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Active filters -->
+  <div class="bg-gray-100">
+    <div
+      class="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8"
+    >
+      <h3 class="text-sm font-medium text-gray-500">
+        Filters
+        <span class="sr-only">, active</span>
+      </h3>
+
+      <div
+        aria-hidden="true"
+        class="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block"
+      ></div>
+
+      <!-- Keyword input -->
+      <div class="relative w-64">
+        <input
+          type="text"
+          id="keyword-input"
+          placeholder="Search by keyword"
+          class="hover:border-gray-400 rounded-md py-2 px-3 pr-10 w-64 sm:text-sm"
+        />
+        <button
+          id="clear-keyword"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none"
+        >
+          <svg
+            class="h-5 w-5 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Custom dropdown for product type -->
+      <div class="relative">
+        <div class="inline-block relative w-64">
+          <select
+            id="location"
+            class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded-md shadow-sm text-gray-700 focus:outline-none sm:text-sm"
+          >
+            {{ with .Params.locations }} {{ range $index, $option := . }}
+            <option value="{{ . }}">{{ . }}</option>
+            {{ end }} {{ else }}
+            <option value="">Location</option>
+            {{ end }}
+          </select>
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
+          >
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- DROPDOWN MENU FOR TYPE LIST -->
+      <div class="relative">
+        <div class="inline-block relative ml-12">
+          <div class="relative inline-block">
+            <div class="flex">
+              <button
+                type="button"
+                class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                id="menu-button"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                Type
+                <svg
+                  class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!--
+                Dropdown menu, show/hide based on menu state.
+    
+                Entering: "transition ease-out duration-100"
+                  From: "transform opacity-0 scale-95"
+                  To: "transform opacity-100 scale-100"
+                Leaving: "transition ease-in duration-75"
+                  From: "transform opacity-100 scale-100"
+                  To: "transform opacity-0 scale-95"
+              -->
+            <div
+              class="absolute z-10 mt-2 w-40 origin-center rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-button"
+              tabindex="-1"
+            >
+              <div class="py-1 hidden" role="none" id="dropdown-menu">
+                <!--
+                    Active: "bg-gray-100", Not Active: ""
+    
+                    Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
+                  -->
+                {{ with .Params.types }} {{ range . }}
+                <li
+                  class="block px-4 py-2 cursor-pointer text-sm font-medium text-gray-500 hover:text-gray-900"
+                  role="menuitem"
+                  tabindex="-1"
+                >
+                  {{ . }}
+                </li>
+                {{ end }} {{ else }}
+                <li
+                  class="block px-4 py-2 cursor-pointer text-sm font-medium text-gray-500 hover:text-gray-900"
+                  role="menuitem"
+                  tabindex="-1"
+                >
+                  Type 1
+                </li>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- DROPDOWN MENU FOR SUBTYPE LIST -->
+      <div class="relative">
+        <div class="inline-block relative ml-28">
+          <div class="relative inline-block">
+            <div class="flex">
+              <button
+                type="button"
+                class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                id="menu-button-1"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                Sub Type
+                <svg
+                  class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!--
+                Dropdown menu, show/hide based on menu state.
+    
+                Entering: "transition ease-out duration-100"
+                  From: "transform opacity-0 scale-95"
+                  To: "transform opacity-100 scale-100"
+                Leaving: "transition ease-in duration-75"
+                  From: "transform opacity-100 scale-100"
+                  To: "transform opacity-0 scale-95"
+              -->
+            <div
+              class="absolute z-10 mt-2 w-40 origin-center rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-button"
+              tabindex="-1"
+            >
+              <div class="py-1 hidden" role="none" id="dropdown-menu-1">
+                <!--
+                    Active: "bg-gray-100", Not Active: ""
+    
+                    Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
+                  -->
+                {{ with .Params.subtypes }} {{ range . }}
+                <li
+                  class="block px-4 py-2 cursor-pointer text-sm font-medium text-gray-500 hover:text-gray-900"
+                  role="menuitem"
+                  tabindex="-1"
+                >
+                  {{ . }}
+                </li>
+                {{ end }} {{ else }}
+                <li
+                  class="block px-4 py-2 cursor-pointer text-sm font-medium text-gray-500 hover:text-gray-900"
+                  role="menuitem"
+                  tabindex="-1"
+                >
+                  SubType 1
+                </li>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-gray-100">
+    <div class="mx-auto max-w-7xl gap-5 px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8 border-t border-2 border-gray-300">
+      <div class="flex flex-col w-1/3 mx-auto my-[2%]">
+          <p class="pb-3 text-xl">Price</p>
+            <div class="relative min-h-[50%]">
+                <input id="fromSlider" type="range" value="20" min="0" max="100"/>
+                <input id="toSlider" type="range" value="70" min="0" max="100"/>
+            </div>
+            <div class="relative flex justify-between text-xl">
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Min</div>
+                    <input class="form_control_container__time__input" type="number" id="fromInput" value="10"/>
+                </div>
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Max</div>
+                    <input class="form_control_container__time__input" type="number" id="toInput" value="40" min="0" max="100"/>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col w-1/3 mx-auto my-[2%]">
+          <p class="pb-3 text-xl">Built Year</p>
+          <div class="relative min-h-[50%]">
+              <input id="fromSlider2" type="range" value="30" min="0" max="100"/>
+              <input id="toSlider2" type="range" value="70" min="0" max="100"/>
+          </div>
+          <div class="relative flex justify-between text-xl">
+              <div class="form_control_container">
+                  <div class="form_control_container__time">Min</div>
+                  <input class="form_control_container__time__input" type="number" id="fromInput2" value="10"/>
+              </div>
+              <div class="form_control_container">
+                  <div class="form_control_container__time">Max</div>
+                  <input class="form_control_container__time__input" type="number" id="toInput2" value="40" min="0" max="100"/>
+              </div>
+          </div>
+      </div>
+      <div class="flex flex-col w-1/3 mx-auto my-[2%]">
+        <p class="pb-3 text-xl">Size</p>
+        <div class="relative min-h-[50%]">
+            <input id="fromSlider3" type="range" value="10" min="0" max="100"/>
+            <input id="toSlider3" type="range" value="80" min="0" max="100"/>
+        </div>
+        <div class="relative flex justify-between text-xl">
+            <div class="form_control_container">
+                <div class="form_control_container__time">Min</div>
+                <input class="form_control_container__time__input" type="number" id="fromInput3" value="10"/>
+            </div>
+            <div class="form_control_container">
+                <div class="form_control_container__time">Max</div>
+                <input class="form_control_container__time__input" type="number" id="toInput3" value="40" min="0" max="100"/>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col w-1/3 mx-auto my-[2%]">
+      <p class="pb-3 text-xl">Floor</p>
+      <div class="relative min-h-[50%]">
+          <input id="fromSlider4" type="range" value="10" min="0" max="100"/>
+          <input id="toSlider4" type="range" value="40" min="0" max="100"/>
+      </div>
+      <div class="relative flex justify-between text-xl">
+          <div class="form_control_container">
+              <div class="form_control_container__time">Min</div>
+              <input class="form_control_container__time__input" type="number" id="fromInput4" value="10"/>
+          </div>
+          <div class="form_control_container">
+              <div class="form_control_container__time">Max</div>
+              <input class="form_control_container__time__input" type="number" id="toInput4" value="40" min="0" max="100"/>
+          </div>
+      </div>
+  </div>
+    </div>
+  </div>
+  <div class="border-t border-gray-200 py-10" id="disclosure-1">
+    <div
+      class="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 px-4 text-sm sm:px-6 md:gap-x-6 lg:px-8"
+    >
+      <div
+        class="grid auto-rows-min grid-cols-1 gap-y-10 md:grid-cols-2 md:gap-x-6"
+      >
+        <fieldset>
+          <legend class="block font-medium">Internal</legend>
+          <div class="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
+            {{ with.Params.internal }} {{ range . }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >{{ . }}</label
+              >
+            </div>
+            {{ end }} {{ else }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >Air Condition</label
+              >
+            </div>
+            {{ end }}
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="block font-medium">External</legend>
+          <div class="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
+            {{ with.Params.external }} {{ range . }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >{{ . }}</label
+              >
+            </div>
+            {{ end }} {{ else }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >Awning</label
+              >
+            </div>
+            {{ end }}
+          </div>
+        </fieldset>
+      </div>
+      <div
+        class="grid auto-rows-min grid-cols-1 gap-y-10 md:grid-cols-2 md:gap-x-6"
+      >
+        <fieldset>
+          <legend class="block font-medium">Construction</legend>
+          <div class="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
+            {{ with.Params.construction }} {{ range . }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >{{ . }}</label
+              >
+            </div>
+            {{ end }} {{ else }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >Neoclassical</label
+              >
+            </div>
+            {{ end }}
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="block font-medium">Suitable For</legend>
+          <div class="space-y-6 pt-6 sm:space-y-4 sm:pt-4">
+            {{ with.Params.suitable}} {{ range . }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >{{ . }}</label
+              >
+            </div>
+            {{ end }} {{ else }}
+            <div class="flex items-center text-base sm:text-sm">
+              <input
+                id="price-0"
+                name="price[]"
+                value="0"
+                type="checkbox"
+                class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                >Commercial Use</label
+              >
+            </div>
+            {{ end }}
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div class="col-start-1 row-start-1 py-4">
+    <div class="mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8">
+      <div class="relative inline-block">
+        <div class="flex">
+          <button
+            type="button"
+            class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+            id="top-dd-btn"
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            Sort
+            <svg
+              class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!--
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+        <div
+          class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="menu-button"
+          tabindex="-1"
+        >
+          <div class="py-1 hidden" role="none" id="top-dropdown">
+            <!--
+                Active: "bg-gray-100", Not Active: ""
+
+                Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
+              -->
+            {{ with .Params.options }} {{ range $index, $option := . }}
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900"
+              role="menuitem"
+              tabindex="-1"
+              id="menu-item-0"
+              >{{ . }}</a
+            >
+            {{ end }} {{ else }}
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900"
+              role="menuitem"
+              tabindex="-1"
+              id="menu-item-0"
+              >Default</a
+            >
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }} {{ end }}
