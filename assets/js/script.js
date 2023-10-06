@@ -2,10 +2,20 @@
 const button = document.getElementById('menu-button');
 const button1 = document.getElementById('menu-button-1');
 const topBtn = document.getElementById('top-dd-btn');
+const internalBtn = document.getElementById('internal-button');
+const externalBtn = document.getElementById('external-button');
+const suitBtn = document.getElementById('suit-btn');
+const constructionBtn = document.getElementById('construction-btn');
 const menu = document.getElementById('dropdown-menu');
 const menu1 = document.getElementById('dropdown-menu-1');
 const topMenu = document.getElementById('top-dropdown');
+const internalMenu = document.getElementById('internal-menu');
+const externalMenu = document.getElementById('external-menu');
+const suitMenu = document.getElementById('suit-menu');
+const constructionMenu = document.getElementById('construction-menu');
 const keywordInput = document.getElementById('keyword-input');
+const locationDropdown = document.getElementById('location-dropdown');
+const itemList = document.querySelectorAll('.item');
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 const clearText = document.getElementById('clearText');
 const clearAll = document.getElementById('clear-all');
@@ -81,13 +91,68 @@ topMenu.addEventListener('click', (eve) => {
   eve.stopPropagation();
 });
 
-clearText.addEventListener('click', () => {
-  keywordInput.value = '';
-})
+// INTERNAL MENU FUNCTION
+internalBtn.addEventListener('click', () => {
+  internalMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (event) => {
+  if (!internalMenu.contains(event.target) && !internalBtn.contains(event.target)) {
+    internalMenu.classList.add('hidden');
+  }
+});
+
+internalMenu.addEventListener('click', (event) => {
+  event.stopPropagation();
+});
+
+// EXTERNAL MENU FUNCTION
+externalBtn.addEventListener('click', () => {
+  externalMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (event) => {
+  if (!externalMenu.contains(event.target) && !externalBtn.contains(event.target)) {
+    externalMenu.classList.add('hidden');
+  }
+});
+
+externalMenu.addEventListener('click', (event) => {
+  event.stopPropagation();
+});
+
+// CONSTRUCTION MENU FUNCTION
+constructionBtn.addEventListener('click', () => {
+  constructionMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (event) => {
+  if (!constructionMenu.contains(event.target) && !constructionBtn.contains(event.target)) {
+    constructionMenu.classList.add('hidden');
+  }
+});
+
+constructionMenu.addEventListener('click', (event) => {
+  event.stopPropagation();
+});
+
+// SUITABLE MENU FUNCTION
+suitBtn.addEventListener('click', () => {
+  suitMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (event) => {
+  if (!suitMenu.contains(event.target) && !suitBtn.contains(event.target)) {
+    suitMenu.classList.add('hidden');
+  }
+});
+
+suitMenu.addEventListener('click', (event) => {
+  event.stopPropagation();
+});
 
 // FILTER CLEAR FUNCTIONALITY
 clearAll.addEventListener('click', () => {
-  keywordInput.value = '';
 
   menu.value = '';
 
