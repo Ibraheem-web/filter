@@ -69,22 +69,24 @@
 
       <!-- Keyword input -->
       <div class="relative w-64">
-        <div class="w-64 wrapper">
+        <div class="w-64 wrapper bg-white">
           <div
-            class="select-btn cursor-pointer h-14 px-5 flex items-center text-xl bg-white rounded-lg border-2 border-slate-50"
+            class="select-btn cursor-pointer h-14 px-5 flex items-center text-xl bg-white"
           >
             <span>Select Location</span>
           </div>
-          <div class="p-5 mt-3 bg-white rounded-lg">
+          <div class="p-5 pt-0 bg-white">
             <div class="relative">
               <input
                 spellcheck="false"
                 type="text"
                 placeholder="Search"
-                class="h-10 w-full outline-none text-base rounded-md pr-5 pl-2 border-[1px] border-slate-400 focus:border-slate-700 placeholder:text-slate-400 focus:placeholder:text-slate-700"
+                class="h-10 w-full outline-none text-base rounded-md pr-5 pl-2 border-[1px] border-slate-400 focus:border-slate-700 placeholder:text-slate-400 focus:placeholder:text-slate-700 input"
               />
             </div>
-            <ul class="mt-3 max-h-40 overflow-y-auto pr-2 options">
+            <ul
+              class="mt-3 max-h-40 overflow-y-auto pl-5 opt options absolute bg-white w-full left-0 hidden z-10"
+            >
               {{ with .Params.locations }} {{ range . }}
               <li class="h-12 px-3 text-xl hover:rounded-md bg-white">
                 {{ . }}
@@ -223,348 +225,375 @@
     ></div>
   </div>
 
-  <div class="col-start-1 row-start-1 py-4">
+  <div
+    class="col-start-1 row-start-1 py-4 flex-row-reverse flex pr-7 md:pr-0 md:inline-block"
+  >
     <div
-      class="mx-auto flex flex-col gap-7 max-w-7xl justify-end px-4 sm:px-6 lg:px-8 lg:flex-row"
+      class="text-sm font-medium text-gray-700 hover:text-gray-900 md:hidden"
+      id="openEl"
+      onclick="toggleMenu('menuEl')"
     >
-    <div class="md:flex gap-7 md:justify-end pb-5 lg:pb-0">
-      <fieldset>
-        <div class="inline-block relative">
-          <div class="flex">
-            <button
-              type="button"
-              class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-              id="internal-button"
-              aria-expanded="false"
-              aria-haspopup="true"
-            >
-              Internal
-              <svg
-                class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <!--
-                    Dropdown menu, show/hide based on menu state.
-        
-                    Entering: "transition ease-out duration-100"
-                      From: "transform opacity-0 scale-95"
-                      To: "transform opacity-100 scale-100"
-                    Leaving: "transition ease-in duration-75"
-                      From: "transform opacity-100 scale-100"
-                      To: "transform opacity-0 scale-95"
-                  -->
-          <div
-            class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md px-3 bg-white shadow-2xl focus:outline-none"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="menu-button"
-            tabindex="-1"
-          >
-            <div
-              class="py-1 hidden md:mt-3 md:max-h-52 md:overflow-y-auto md:pr-2 options"
-              role="none"
-              id="internal-menu"
-            >
-              <!--
-                        Active: "bg-gray-100", Not Active: ""
-        
-                        Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
-                      -->
-              {{ with .Params.internal }} {{ range . }}
-              <div class="flex items-center text-base pb-5 sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >{{ . }}</label
-                >
-              </div>
-              {{ end }} {{ else }}
-              <div class="flex items-center text-base sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >Air Condition</label
-                >
-              </div>
-              {{ end }}
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      <fieldset>
-        <div class="inline-block relative">
-          <div class="flex">
-            <button
-              type="button"
-              class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-              id="external-button"
-              aria-expanded="false"
-              aria-haspopup="true"
-            >
-              External
-              <svg
-                class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <!--
-                    Dropdown menu, show/hide based on menu state.
-        
-                    Entering: "transition ease-out duration-100"
-                      From: "transform opacity-0 scale-95"
-                      To: "transform opacity-100 scale-100"
-                    Leaving: "transition ease-in duration-75"
-                      From: "transform opacity-100 scale-100"
-                      To: "transform opacity-0 scale-95"
-                  -->
-          <div
-            class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md px-3 bg-white shadow-2xl focus:outline-none"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="menu-button"
-            tabindex="-1"
-          >
-            <div
-              class="py-1 hidden md:mt-3 md:max-h-52 md:overflow-y-auto md:pr-2 options"
-              role="none"
-              id="external-menu"
-            >
-              <!--
-                        Active: "bg-gray-100", Not Active: ""
-        
-                        Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
-                      -->
-              {{ with .Params.external }} {{ range . }}
-              <div class="flex items-center text-base pb-5 sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >{{ . }}</label
-                >
-              </div>
-              {{ end }} {{ else }}
-              <div class="flex items-center text-base sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >Awning</label
-                >
-              </div>
-              {{ end }}
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      <fieldset>
-        <div class="relative inline-block">
-          <div class="flex">
-            <button
-              type="button"
-              class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-              id="construction-btn"
-              aria-expanded="false"
-              aria-haspopup="true"
-            >
-              Construction
-              <svg
-                class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <!--
-                  Dropdown menu, show/hide based on menu state.
-      
-                  Entering: "transition ease-out duration-100"
-                    From: "transform opacity-0 scale-95"
-                    To: "transform opacity-100 scale-100"
-                  Leaving: "transition ease-in duration-75"
-                    From: "transform opacity-100 scale-100"
-                    To: "transform opacity-0 scale-95"
-                -->
-          <div
-            class="absolute right-0 z-10 mt-2 w-40 px-3 origin-top-right bg-white shadow-2xl focus:outline-none"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="menu-button"
-            tabindex="-1"
-          >
-            <div
-              class="py-1 hidden md:mt-3 md:max-h-52 md:overflow-y-auto md:pr-2 options"
-              role="none"
-              id="construction-menu"
-            >
-              <!--
-                  Active: "bg-gray-100", Not Active: ""
-  
-                  Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
-                -->
-              {{ with .Params.construction }} {{ range . }}
-              <div class="flex items-center text-base pb-5 sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >{{ . }}</label
-                >
-              </div>
-              {{ end }} {{ else }}
-              <div class="flex items-center text-base sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >Neoclassical</label
-                >
-              </div>
-              {{ end }}
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      <fieldset>
-        <div class="relative inline-block">
-          <div class="flex">
-            <button
-              type="button"
-              class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-              id="suit-btn"
-              aria-expanded="false"
-              aria-haspopup="true"
-            >
-              Suitable For
-              <svg
-                class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <!--
-                  Dropdown menu, show/hide based on menu state.
-      
-                  Entering: "transition ease-out duration-100"
-                    From: "transform opacity-0 scale-95"
-                    To: "transform opacity-100 scale-100"
-                  Leaving: "transition ease-in duration-75"
-                    From: "transform opacity-100 scale-100"
-                    To: "transform opacity-0 scale-95"
-                -->
-          <div
-            class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md px-3 bg-white shadow-2xl focus:outline-none"
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="menu-button"
-            tabindex="-1"
-          >
-            <div
-              class="py-1 hidden md:mt-3 md:max-h-52 md:overflow-y-auto md:pr-2 options"
-              role="none"
-              id="suit-menu"
-            >
-              <!--
-                  Active: "bg-gray-100", Not Active: ""
-  
-                  Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
-                -->
-              {{ with .Params.suitable }} {{ range . }}
-              <div class="flex items-center text-base pb-5 sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >{{ . }}</label
-                >
-              </div>
-              {{ end }} {{ else }}
-              <div class="flex items-center text-base sm:text-sm">
-                <input
-                  id="price-0"
-                  name="price[]"
-                  value="0"
-                  type="checkbox"
-                  class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
-                  >Neoclassical</label
-                >
-              </div>
-              {{ end }}
-            </div>
-          </div>
-        </div>
-      </fieldset>
+      <p>Filters</p>
     </div>
+    <div
+      class="bg-white hidden md:bg-transparent absolute h-full md:h-auto right-0 w-1/2 md:w-auto md:flex flex-col md:gap-7 md:static max-w-7xl justify-end px-4 sm:px-6 lg:px-8 lg:flex-row"
+      id="menuEl"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        id="closeEl"
+        class="-mr-1 ml-1 md:hidden h-12 w-12 right-5 absolute flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+        viewBox="0 0 384 512"
+        onclick="toggleMenu('menuEl')"
+      >
+        <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+        <style>
+          svg {
+            fill: #374151;
+          }
+        </style>
+        <path
+          d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+        />
+      </svg>
+      <div class="pt-20 md:pt-0 md:flex gap-7 md:justify-end md:pb-2 lg:pb-0">
+        <fieldset>
+          <div class="inline-block relative">
+            <div class="flex">
+              <button
+                type="button"
+                class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                id="internal-button"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                Internal
+                <svg
+                  class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!--
+                    Dropdown menu, show/hide based on menu state.
+        
+                    Entering: "transition ease-out duration-100"
+                      From: "transform opacity-0 scale-95"
+                      To: "transform opacity-100 scale-100"
+                    Leaving: "transition ease-in duration-75"
+                      From: "transform opacity-100 scale-100"
+                      To: "transform opacity-0 scale-95"
+                  -->
+            <div
+              class="md:absolute md:right-0 z-10 mt-2 w-40 md:origin-top-right rounded-md px-3 bg-white shadow-2xl focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-button"
+              tabindex="-1"
+            >
+              <div
+                class="py-1 hidden mt-3 max-h-52 overflow-y-auto pr-2 options"
+                role="none"
+                id="internal-menu"
+              >
+                <!--
+                        Active: "bg-gray-100", Not Active: ""
+        
+                        Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
+                      -->
+                {{ with .Params.internal }} {{ range . }}
+                <div class="flex items-center text-base pb-5 sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >{{ . }}</label
+                  >
+                </div>
+                {{ end }} {{ else }}
+                <div class="flex items-center text-base sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >Air Condition</label
+                  >
+                </div>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div class="inline-block relative">
+            <div class="flex">
+              <button
+                type="button"
+                class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                id="external-button"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                External
+                <svg
+                  class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!--
+                    Dropdown menu, show/hide based on menu state.
+        
+                    Entering: "transition ease-out duration-100"
+                      From: "transform opacity-0 scale-95"
+                      To: "transform opacity-100 scale-100"
+                    Leaving: "transition ease-in duration-75"
+                      From: "transform opacity-100 scale-100"
+                      To: "transform opacity-0 scale-95"
+                  -->
+            <div
+              class="md:absolute md:right-0 z-10 mt-2 w-40 md:origin-top-right rounded-md px-3 bg-white shadow-2xl focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-button"
+              tabindex="-1"
+            >
+              <div
+                class="py-1 hidden mt-3 max-h-52 overflow-y-auto pr-2 options"
+                role="none"
+                id="external-menu"
+              >
+                <!--
+                        Active: "bg-gray-100", Not Active: ""
+        
+                        Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
+                      -->
+                {{ with .Params.external }} {{ range . }}
+                <div class="flex items-center text-base pb-5 sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >{{ . }}</label
+                  >
+                </div>
+                {{ end }} {{ else }}
+                <div class="flex items-center text-base sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >Awning</label
+                  >
+                </div>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div class="relative inline-block">
+            <div class="flex">
+              <button
+                type="button"
+                class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                id="construction-btn"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                Construction
+                <svg
+                  class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!--
+                  Dropdown menu, show/hide based on menu state.
+      
+                  Entering: "transition ease-out duration-100"
+                    From: "transform opacity-0 scale-95"
+                    To: "transform opacity-100 scale-100"
+                  Leaving: "transition ease-in duration-75"
+                    From: "transform opacity-100 scale-100"
+                    To: "transform opacity-0 scale-95"
+                -->
+            <div
+              class="md:absolute md:right-0 z-10 mt-2 w-40 px-3 md:origin-top-right bg-white shadow-2xl focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-button"
+              tabindex="-1"
+            >
+              <div
+                class="py-1 hidden mt-3 max-h-52 overflow-y-auto pr-2 options"
+                role="none"
+                id="construction-menu"
+              >
+                <!--
+                  Active: "bg-gray-100", Not Active: ""
+  
+                  Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
+                -->
+                {{ with .Params.construction }} {{ range . }}
+                <div class="flex items-center text-base pb-5 sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >{{ . }}</label
+                  >
+                </div>
+                {{ end }} {{ else }}
+                <div class="flex items-center text-base sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >Neoclassical</label
+                  >
+                </div>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div class="relative inline-block">
+            <div class="flex">
+              <button
+                type="button"
+                class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                id="suit-btn"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                Suitable For
+                <svg
+                  class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!--
+                  Dropdown menu, show/hide based on menu state.
+      
+                  Entering: "transition ease-out duration-100"
+                    From: "transform opacity-0 scale-95"
+                    To: "transform opacity-100 scale-100"
+                  Leaving: "transition ease-in duration-75"
+                    From: "transform opacity-100 scale-100"
+                    To: "transform opacity-0 scale-95"
+                -->
+            <div
+              class="md:absolute md:right-0 z-10 mt-2 w-40 md:origin-top-right rounded-md px-3 bg-white shadow-2xl focus:outline-none"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="menu-button"
+              tabindex="-1"
+            >
+              <div
+                class="py-1 hidden mt-3 max-h-52 overflow-y-auto pr-2 options"
+                role="none"
+                id="suit-menu"
+              >
+                <!--
+                  Active: "bg-gray-100", Not Active: ""
+  
+                  Selected: "font-medium text-gray-900", Not Selected: "text-gray-500"
+                -->
+                {{ with .Params.suitable }} {{ range . }}
+                <div class="flex items-center text-base pb-5 sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >{{ . }}</label
+                  >
+                </div>
+                {{ end }} {{ else }}
+                <div class="flex items-center text-base sm:text-sm">
+                  <input
+                    id="price-0"
+                    name="price[]"
+                    value="0"
+                    type="checkbox"
+                    class="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label for="price-0" class="ml-3 min-w-0 flex-1 text-gray-600"
+                    >Neoclassical</label
+                  >
+                </div>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
       <div class="md:flex gap-7 md:justify-end">
         <div>
           <div class="relative inline-block">
@@ -603,14 +632,14 @@
                       To: "transform opacity-0 scale-95"
                   -->
             <div
-              class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl focus:outline-none"
+              class="md:absolute md:right-0 z-10 mt-2 w-40 md:origin-top-right rounded-md bg-white shadow-2xl focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"
               tabindex="-1"
             >
               <div
-                class="py-1 hidden md:mt-3 md:max-h-52 md:overflow-y-auto md:pr-2 options"
+                class="py-1 hidden mt-3 max-h-52 overflow-y-auto pr-2 options"
                 role="none"
                 id="dropdown-menu"
               >
@@ -679,14 +708,14 @@
                       To: "transform opacity-0 scale-95"
                   -->
             <div
-              class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl focus:outline-none"
+              class="md:absolute md:right-0 z-10 mt-2 w-40 md:origin-top-right rounded-md bg-white shadow-2xl focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"
               tabindex="-1"
             >
               <div
-                class="py-1 hidden md:mt-3 md:max-h-52 md:overflow-y-auto md:pr-2 options"
+                class="py-1 hidden mt-3 max-h-52 overflow-y-auto pr-2 options"
                 role="none"
                 id="dropdown-menu-1"
               >
@@ -755,14 +784,14 @@
                       To: "transform opacity-0 scale-95"
                   -->
             <div
-              class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl focus:outline-none"
+              class="md:absolute md:right-0 z-10 mt-2 w-40 md:origin-top-right rounded-md bg-white shadow-2xl focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"
               tabindex="-1"
             >
               <div
-                class="py-1 md:mt-3 md:max-h-52 md:overflow-y-auto md:pr-2 hidden options"
+                class="py-1 mt-3 max-h-52 overflow-y-auto pr-2 hidden options"
                 role="none"
                 id="top-dropdown"
               >

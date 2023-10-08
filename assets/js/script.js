@@ -1,5 +1,7 @@
 // ID's REFRENCES FROM HTML
 const button = document.getElementById('menu-button');
+const openEl = document.getElementById('openEl');
+const closeEl = document.getElementById('closeEl');
 const button1 = document.getElementById('menu-button-1');
 const topBtn = document.getElementById('top-dd-btn');
 const internalBtn = document.getElementById('internal-button');
@@ -7,6 +9,7 @@ const externalBtn = document.getElementById('external-button');
 const suitBtn = document.getElementById('suit-btn');
 const constructionBtn = document.getElementById('construction-btn');
 const menu = document.getElementById('dropdown-menu');
+const menuEl = document.getElementById('menuEl');
 const menu1 = document.getElementById('dropdown-menu-1');
 const topMenu = document.getElementById('top-dropdown');
 const internalMenu = document.getElementById('internal-menu');
@@ -31,6 +34,45 @@ const fromSlider4 = document.querySelector('#fromSlider4');
 const toSlider4 = document.querySelector('#toSlider4');
 const fromInput4 = document.querySelector('#fromInput4');
 const toInput4 = document.querySelector('#toInput4');
+const wrapper = document.querySelector(".wrapper"),
+selectBtn = wrapper.querySelector(".select-btn"),
+searchInp = wrapper.querySelector(".input"),
+options = wrapper.querySelector(".opt");
+
+
+let countries = ["Afghanistan", "Algeria", "Argentina", "Australia", "Bangladesh", "Belgium", "Bhutan",
+                 "Brazil", "Canada", "China", "Denmark", "Ethiopia", "Finland", "France", "Germany",
+                 "Hungary", "Iceland", "India", "Indonesia", "Iran", "Italy", "Japan", "Malaysia",
+                 "Maldives", "Mexico", "Morocco", "Nepal", "Netherlands", "Nigeria", "Norway", "Pakistan",
+                 "Peru", "Russia", "Romania", "South Africa", "Spain", "Sri Lanka", "Sweden", "Switzerland",
+                 "Thailand", "Turkey", "Uganda", "Ukraine", "United States", "United Kingdom", "Vietnam"];
+function addCountry(selectedCountry) {
+    options.innerHTML = "";
+    countries.forEach(country => {
+        let isSelected = country == selectedCountry ? "selected" : "";
+        let li = `<li onclick="updateName(this)" class="${isSelected}">${country}</li>`;
+        options.insertAdjacentHTML("beforeend", li);
+    });
+}
+addCountry();
+function updateName(selectedLi) {
+    searchInp.value = "";
+    addCountry(selectedLi.innerText);
+    wrapper.classList.remove("active");
+    selectBtn.firstElementChild.innerText = selectedLi.innerText;
+}
+searchInp.addEventListener("keyup", () => {
+    let arr = [];
+    let searchWord = searchInp.value.toLowerCase();
+    arr = countries.filter(data => {
+        return data.toLowerCase().startsWith(searchWord);
+    }).map(data => {
+        let isSelected = data == selectBtn.firstElementChild.innerText ? "selected" : "";
+        return `<li onclick="updateName(this)" class="${isSelected}">${data}</li>`;
+    }).join("");
+    options.innerHTML = arr ? arr : `<p style="margin-top: 10px;">Oops! Country not found</p>`;
+});
+searchInp.addEventListener("click", () => options.classList.toggle("hidden"));
 
 fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
 setToggleAccessible(toSlider);
@@ -151,6 +193,14 @@ suitMenu.addEventListener('click', (event) => {
   event.stopPropagation();
 });
 
+// SMALL SCREEN FUNCTIONALITY
+function toggleMenu(elementId) {
+  const menuEl = document.getElementById(elementId);
+  if (menuEl) {
+      menuEl.classList.toggle('hidden');
+  }
+};
+
 // FILTER CLEAR FUNCTIONALITY
 clearAll.addEventListener('click', () => {
 
@@ -159,7 +209,9 @@ clearAll.addEventListener('click', () => {
   checkboxes.forEach(checkbox => {
     checkbox.checked = false;
   })
-})
+});
+
+
 
 // MULTIRANGE SLIDER 
 
